@@ -20,10 +20,17 @@ function App() {
     addPeople(peps);
   }, [])
 
+  let [select, setselect] = useState(new Set());
   useEffect(() => {
+    if(relation.length==1 || relation.length==2) {
+      console.log(relation.length);
+      setselect(new Set(relation));
+    }
+
     if(relation.length==2){
       checkRelation(people, relation[0], relation[1], 0, []);
     }
+    
   }, [relation])
 
   // useEffect(() => {
@@ -117,10 +124,14 @@ function App() {
       <Col style={{overflow: 'auto', height: '600px'}}>
         {Object.keys(people).map((person, i) =>
           <Card key={i} style={{ width: '100%', marginBottom: '20px' }}>
-          <span className={"select " + ((person===relation[0] || person===relation[1]) && 'bg-primary')} onClick={() => {
+          <span className={"select " + (select.has(person) && 'bg-primary')} onClick={() => {
+            if(relation==0) {
+              setRelation([person, ...relation])
+              setselect(new Set(relation));
+            }
             setPathTo([]);
             console.log("clicked "+relation.length);
-            setRelation([person, ...relation]);
+            !select.has(person) && setRelation([person, ...relation]);
             }}></span>
 
           <Card.Body>
@@ -138,7 +149,7 @@ function App() {
         </Card>)}
       </Col>
       <Col>
-        <Card style={{ width: '100%', height: '100%', padding: "20px"}}>
+        <Card style={{ width: '100%', overflow: 'auto', height: '600px', padding: "20px"}}>
           {pathTo.length>0 ? <h2 style={{marginBottom: '5px'}}><b> Found {pathTo.length} Relationship</b></h2> : <h2 align='center'><b>Select Any Two Person</b></h2>}
           {pathTo.map((route, i) =>
             <Card key={i} style={{marginBlock: '10px'}}>
@@ -157,7 +168,7 @@ function App() {
 
     <Offcanvas show={show} onHide={handleClose} placement='end'>
       <Offcanvas.Header closeButton>
-        <Offcanvas.Title>Add Friend</Offcanvas.Title>
+        <Offcanvas.Title><b>{person}: </b> Add Friends</Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
       {/* {friend.map(f =>

@@ -8,7 +8,7 @@ npm run dev
 ```
 
 
-**Open http://localhost:3000 to check now**
+**Open http://localhost:3000 to check now. Used localStorage as the DB.**
 
 ## Screencast
 
